@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Moodleアシスタント（MCP対応）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-6">
+        <h1 class="text-2xl font-bold text-center mb-4 text-indigo-700">Moodleアシスタント（MCP対応）</h1>
+
+        <div class="mb-4">
+            <textarea id="prompt"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="例：来週までの課題を教えてください"></textarea>
+        </div>
+
+        <div class="text-center">
+            <button onclick="sendPrompt()"
+                class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-indigo-700 transition">送信</button>
+        </div>
+
+        <div id="responseArea"
+            class="mt-6 bg-gray-100 border border-gray-200 rounded-lg p-4 text-gray-800 whitespace-pre-wrap"
+            style="min-height: 100px;">
+            アシスタントの応答がここに表示されます。
+        </div>
+    </div>
+
+    <script>
+        async function sendPrompt() {
+            const prompt = document.getElementById("prompt").value;
+            const responseArea = document.getElementById("responseArea");
+            if (!prompt.trim()) return;
+            responseArea.innerText = "\uD83D\uDD04 応答を取得中...";
+
+            try {
+                const res = await fetch("/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const data = await res.json();
+                responseArea.innerText = data.response || "\u2753 応答がありません";
+            } catch (e) {
+                responseArea.innerText = "\u274C エラーが発生しました: " + e.message;
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,14 +1,25 @@
-from fastapi import FastAPI
-from moodle_api import get_assignments
-from llm_ollama import generate_response
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from server import handle_user_input
 
 app = FastAPI()
 
-@app.get("/ask")
-def ask():
-    print("/ask にリクエストを受信しました") 
-    assignments = get_assignments()
-    print(f"課題数: {len(assignments)}")
-    reply = generate_response(assignments)
-    print("応答生成完了")
+# テンプレートと静的ファイル設定
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+class Prompt(BaseModel):
+    prompt: str
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/ask")
+def ask(input: Prompt):
+    reply = handle_user_input(input.prompt)
     return {"response": reply}
+
