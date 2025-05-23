@@ -24,6 +24,7 @@ this MCP server can assist following thing,
 
 
 ## How to run
+firstly, please revise your information
 1. $ python -m venv venv
 2. $ source venv/bin/activate # macOS/Linux
    $ .\venv\Scripts\activate # windows PowerShell
