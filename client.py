@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+MODEL_NAME = os.getenv("LLM_MODEL")
 
 class MCPClient:
     def __init__(self):
@@ -66,7 +67,7 @@ class MCPClient:
 
         # 1回目のChatCompletion（Function Calling auto）
         response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+            model=MODEL_NAME,
             messages=messages,
             functions=openai_tools,
             function_call="auto"
@@ -101,7 +102,7 @@ class MCPClient:
 
             # 2回目のChatCompletion（結果を踏まえた応答生成）
             second_response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",
+                model=MODEL_NAME,
                 messages=messages
             )
             return second_response.choices[0].message.content or ""
