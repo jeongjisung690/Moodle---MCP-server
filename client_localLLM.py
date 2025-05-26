@@ -131,8 +131,6 @@ class MCPClient:
             response = await self.process_query(query)
             print(response)
 
-    async def close(self):
-        await self.session.__aexit__(None, None, None)
 
 async def main():
     if len(sys.argv) < 2:
