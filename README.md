@@ -9,22 +9,15 @@ this MCP server can assist following thing,
 
 
 ## File architecture
-- config.json  : register your Moodle URL and its token, also API Key for OpenAI API and model type
-- main.py   : the rooting for FastAPI and configuration of templates
-- server.py : input/ouput of user via OpenAI API and the control for tools calling 
-- tool_registry.py  : store the meta information of tools and its assignments
-- tools/
-  - moodle_tools.py : functions which call Moodle API(e.g. duedate, new messages) 
-- templates/
-  - index.html  : UI
-- static/
-  - style.css
-- requirments.txt   : all you need to run 
+- .env : your environment settings
+- client.py   : process user's query, create a answer via LLM
+- server.py : run tools
+- requirments.txt  
 - README.md
 
 
 ## How to run
-firstly, please revise your information
+firstly, please input your information in .env file.
 1. $ python -m venv venv
 2. $ source venv/bin/activate # macOS/Linux
    $ .\venv\Scripts\activate # windows PowerShell
