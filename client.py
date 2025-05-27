@@ -86,7 +86,6 @@ class MCPClient:
 
             # ツール呼び出し
             tool_result = await self.session.call_tool(tool_name, tool_args)
-            print(f"tool_result: {tool_result}")
 
             # tool_result.content は List[TextContent] なのでテキストを連結
             texts = [c.text for c in tool_result.content if hasattr(c, "text")]
