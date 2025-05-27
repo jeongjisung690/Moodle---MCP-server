@@ -1,4 +1,4 @@
 httpx
 python-dotenv
-openai
+openai==0.28
 mcp
