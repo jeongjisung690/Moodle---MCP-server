@@ -12,7 +12,7 @@ from mcp.client.stdio import stdio_client
 from dotenv import load_dotenv
 load_dotenv()
 
-LLM_MODEL = os.getenv("MODEL_NAME")
+MODEL_NAME = os.getenv("LLM_MODEL")
 
 
 def call_ollama(model: str, prompt: str) -> str:
@@ -88,7 +88,6 @@ class MCPClient:
 
 
     async def process_query(self, query: str) -> str:
-        model = LLM_MODEL # your local LLM model
         try:
             # 1. ツール一覧を取得
             tools_resp = await self.session.list_tools()
@@ -103,7 +102,7 @@ class MCPClient:
                 "2. ツール不要時: {\"tool_name\": \"none\", \"answer\": \"...\"}"
             )
             # 3. LLM へ問い合わせ
-            tool_decision_text = call_ollama(model, full_prompt)
+            tool_decision_text = call_ollama(MODEL_NAME, full_prompt)
             tool_data = json.loads(tool_decision_text)
 
             tool_name = tool_data.get("tool_name")
@@ -116,7 +115,7 @@ class MCPClient:
 
             # 5. ツール結果をもとに最終回答を生成
             final_prompt = f"ユーザーの質問: {query}\n\nツール「{tool_name}」の結果:\n{tool_response}\n\nこの情報をもとに自然な日本語で返答してください。"
-            return call_ollama(model, final_prompt)
+            return call_ollama(MODEL_NAME, final_prompt)
 
         except Exception as e:
             return f"[エラー] ツール判定処理中に問題が発生しました: {e}"
